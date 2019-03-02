@@ -26,6 +26,7 @@ use SMW\DataValues\ValueValidators\CompoundConstraintValueValidator;
 use SMW\DataValues\ValueValidators\PatternConstraintValueValidator;
 use SMW\DataValues\ValueValidators\PropertySpecificationConstraintValueValidator;
 use SMW\DataValues\ValueValidators\UniquenessConstraintValueValidator;
+use SMW\DataValues\ValueValidators\SchemaConstraintValueValidator;
 use SMW\Query\DescriptionBuilderRegistry;
 use SMWNumberValue as NumberValue;
 use SMWPropertyValue as PropertyValue;
@@ -129,6 +130,7 @@ return [
 			CompoundConstraintValueValidator::class
 		);
 
+		$propertySpecificationLookup = $containerBuilder->singleton( 'PropertySpecificationLookup' );
 		$compoundConstraintValueValidator = new CompoundConstraintValueValidator();
 
 		// Any registered ConstraintValueValidator becomes weaker(diminished) in the context
@@ -136,7 +138,7 @@ return [
 		$compoundConstraintValueValidator->registerConstraintValueValidator(
 			new UniquenessConstraintValueValidator(
 				$containerBuilder->singleton( 'Store' ),
-				$containerBuilder->singleton( 'PropertySpecificationLookup' )
+				$propertySpecificationLookup
 			)
 		);
 
@@ -150,7 +152,7 @@ return [
 
 		$allowsListConstraintValueValidator = new AllowsListConstraintValueValidator(
 			$containerBuilder->create( DataValueServiceFactory::TYPE_PARSER . AllowsListValue::TYPE_ID ),
-			$containerBuilder->singleton( 'PropertySpecificationLookup' )
+			$propertySpecificationLookup
 		);
 
 		$compoundConstraintValueValidator->registerConstraintValueValidator(
@@ -159,6 +161,13 @@ return [
 
 		$compoundConstraintValueValidator->registerConstraintValueValidator(
 			new PropertySpecificationConstraintValueValidator()
+		);
+
+		$compoundConstraintValueValidator->registerConstraintValueValidator(
+			new SchemaConstraintValueValidator(
+				$containerBuilder->singleton( 'SchemaFactory' ),
+				$propertySpecificationLookup
+			)
 		);
 
 		return $compoundConstraintValueValidator;
@@ -309,7 +318,7 @@ return [
 	},
 
 	/**
-	 * TimeValueParser
+	 * DescriptionBuilderRegistry
 	 *
 	 * @return callable
 	 */

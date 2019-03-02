@@ -216,7 +216,8 @@ class TypesRegistry {
 			'_SCHEMA_LINK' => [ '_wps', true, false, false ], // "Schema link"
 
 			//
-			'_FORMAT_SCHEMA' => [ '_wps', true, true, false ], // "Formatter schema"
+			'_FORMAT_SCHEMA' => [ '_wps', true, true, true ], // "Formatter schema"
+			'_CONSTRAINT_SCHEMA' => [ '_wps', true, true, true ], // "Constraint schema"
 
 			// File attachment
 			'_ATTCH_LINK'  => [ '_wpg', true, false, false ], // "Attachment link"
